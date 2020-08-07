@@ -22,6 +22,8 @@ urlpatterns = [
          auth_views.LogoutView.as_view(template_name='accounts/registration/logged_out.html'),
          name='logout'),
 
+    path('register/', views.register, name='register'),
+
 
     # path('signout/', views.signout, name='signout'),
     # path('signup/', views.signup, name='signup'),
