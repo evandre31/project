@@ -28,8 +28,8 @@ urlpatterns = [
     # path('signout/', views.signout, name='signout'),
     # path('signup/', views.signup, name='signup'),
     path('profile/', views.profile, name='profile'),
-    # path('profile/edit', views.profile_edit, name='profile_edit'),
-    # path('change_password/', views.change_password, name='change_password'),
+    path('profile/edit', views.profile_edit, name='profile_edit'),
+    path('change_password/', views.change_password, name='change_password'),
     #
     # path('password-reset/',
     #      auth_views.PasswordResetView.as_view(template_name='accounts/registration/password_reset.html'),

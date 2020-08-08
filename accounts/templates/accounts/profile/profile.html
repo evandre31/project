@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
- 
 
 {% block content %}
-    <h3>profile</h3>
+<h3>profile</h3>
+<p><strong>données issus de user ___________________</strong></p>
+<h1>{{ user.email }}</h1>
+{{ profile.user.email }} <br><!--pour accéder au field de user qui est relié au profile -->
+{{ profile.user.first_name }} <br><!--pour accéder au field de user qui est relié au profile -->
+{{ profile.user.last_name }} <br><!--pour accéder au field de user qui est relié au profile -->
+
+<p><strong>données issus de profile ___________________</strong></p>
+
+{{ profile.user }}<br>  <!--pour accéder au field de profile -->
+{{ profile.phone }}<br> <!--pour accéder au field de profile -->
+{{ profile.address }}   <!--pour accéder au field de profile -->
 {% endblock %}
