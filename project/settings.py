@@ -114,14 +114,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# ____________________
-# mes ajouts
-# _____________________
+# ********************************************************************************
+# ********************               mes ajouts       ****************************
+# ********************************************************************************
 
 # LOGIN_REDIRECT_URL = '/accounts/profile'  # login redirect par défaut c'est vers profile, a changer en cas de besoin
 
 
-#  pour tester /  python manage.py sendtestemail monadresse@gmail.com
+#  pour tester /  python manage.py sendtestemail monadresse@gmail.com_________
 if not DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST_USER = "parwizforogh0@gmail.com"
@@ -131,3 +131,6 @@ if not DEBUG:
     EMAIL_HOST_PASSWORD = "Your Password"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# pour login avec user ou email_____________________________________________________
+AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
