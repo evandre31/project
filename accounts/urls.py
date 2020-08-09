@@ -24,13 +24,20 @@ urlpatterns = [
 
     path('register/', views.register, name='register'),
 
-
-    # path('signout/', views.signout, name='signout'),
-    # path('signup/', views.signup, name='signup'),
     path('profile/', views.profile, name='profile'),
     path('profile/edit', views.profile_edit, name='profile_edit'),
-    path('change_password/', views.change_password, name='change_password'),
-    #
+    # path('change_password/', views.change_password, name='change_password'),
+    path('change_password/',
+         auth_views.PasswordChangeView.as_view(
+             template_name='accounts/registration/change_password.html',
+             success_url='/accounts/change_password_done/'),
+         name='change_password'),
+    path('change_password_done/',
+         auth_views.PasswordChangeDoneView.as_view(
+             template_name='accounts/registration/change_password_done.html'),
+         name='change_password_done'),
+
+
     # path('password-reset/',
     #      auth_views.PasswordResetView.as_view(template_name='accounts/registration/password_reset.html'),
     #      name='password_reset'),

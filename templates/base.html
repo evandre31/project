@@ -6,6 +6,10 @@
 </head>
 <body>
 <h1>partie base</h1>
+{{ user }}
+<a href="{% url 'accounts:login' %}">login</a>
+<a href="{% url 'accounts:logout' %}">logout</a>
+<a href="{% url 'accounts:change_password' %}">change password</a>
 <br>
 <hr>
 {% block content %}

@@ -42,16 +42,16 @@ def profile_edit(request):
     return render(request, 'accounts/profile/edit_profile.html', {'userform': userform, 'profileform': profileform})
 
 
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important! conserver la session aprés le changement
-            # messages.success(request, 'Your password was successfully updated!')
-            return redirect('/accounts/profile')
-        else:
-            return redirect('/accounts/change_password')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'accounts/registration/change_password.html', {'form': form})
+# def change_password(request):
+#     if request.method == 'POST':
+#         form = PasswordChangeForm(request.user, request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             update_session_auth_hash(request, user)  # Important! conserver la session aprés le changement
+#             # messages.success(request, 'Your password was successfully updated!')
+#             return redirect('/accounts/profile')
+#         else:
+#             return redirect('/accounts/change_password')
+#     else:
+#         form = PasswordChangeForm(request.user)
+#     return render(request, 'accounts/registration/change_password.html', {'form': form})
