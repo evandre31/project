@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, update_session_auth_hash
@@ -20,11 +21,13 @@ def register(request):  # ou appeler  signin
     return render(request, 'accounts/registration/register.html', {'form': form})
 
 
+@login_required
 def profile(request):
     profile_ = Profile.objects.get(user=request.user)  # get profile qui a user(dans profile) = au user request
     return render(request, 'accounts/profile/profile.html', {'profile': profile_})
 
 
+@login_required
 def profile_edit(request):
     profile_ = Profile.objects.get(user=request.user)  # get profile qui a user(dans profile) = au user request
     if request.method == 'POST':
@@ -40,7 +43,6 @@ def profile_edit(request):
         userform = UserForm(instance=request.user)  # request.user = data du user connecté (affichage)
         profileform = ProfileForm(instance=profile_)  # profile_ = profile du user connecté  (affichage)
     return render(request, 'accounts/profile/edit_profile.html', {'userform': userform, 'profileform': profileform})
-
 
 # def change_password(request):
 #     if request.method == 'POST':
