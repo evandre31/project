@@ -1,4 +1,6 @@
-<h3>navbar</h3>
+navbar
+{% load static %}
+<img src="{% static 'img/logo.png' %}" alt="logo" width="110" onclick="speak()">
 {{ user }}
 <a href="{% url 'home' %}">home </a>
 <a href="{% url 'accounts:login' %}">login</a>

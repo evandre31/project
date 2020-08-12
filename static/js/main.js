@@ -1,0 +1,3 @@
+function speak() {
+    alert('test')
+}
