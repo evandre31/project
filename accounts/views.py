@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
@@ -23,8 +24,9 @@ def register(request):  # ou appeler  signin
 
 @login_required
 def profile(request):
+    storage = messages.get_messages(request)
     profile_ = Profile.objects.get(user=request.user)  # get profile qui a user(dans profile) = au user request
-    return render(request, 'accounts/profile/profile.html', {'profile': profile_})
+    return render(request, 'accounts/profile/profile.html', {'profile': profile_, 'messages': storage})
 
 
 @login_required
@@ -38,6 +40,7 @@ def profile_edit(request):
             myform = profileform.save(commit=False)  # s'assurer que le profile est relié au user
             myform.user = request.user  # s'assurer que le profile est relié au user
             myform.save()  # save profile
+            messages.success(request, 'updated')
             return redirect('accounts:profile')
     else:  # (affichage)
         userform = UserForm(instance=request.user)  # request.user = data du user connecté (affichage)

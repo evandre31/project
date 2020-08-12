@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h3>profile</h3>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success"><h1 class="text-center">{{ message }}</h1></div>
+        {% endfor %}
+    {% endif %}
+
+    <h3>profile</h3>
 <p><strong>données issus de user ___________________</strong></p>
 <h1>{{ user.email }}</h1>
 {{ profile.user.email }} <br><!--pour accéder au field de user qui est relié au profile -->
