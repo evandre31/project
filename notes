@@ -1,0 +1,136 @@
+    installation :________________________________________________________________________
+installation de l'app accounts
+
+installer django_cleanup
+installer pillow
+
+dans settings : ##- INSTALLED_APPS =    [
+                                        'accounts.apps.AccountsConfig',
+                                        'django_cleanup.apps.CleanupConfig',
+
+
+                ##- media
+                MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+                MEDIA_URL = '/media/'
+
+                #########################################
+                ##- pour afficher les messages d'alerte #
+                #########################################
+                from django.contrib.messages import constants as messages
+
+                MESSAGE_TAGS = {
+                messages.DEBUG: 'alert-info',
+                messages.INFO: 'alert-info',
+                messages.SUCCESS: 'alert-success',
+                messages.WARNING: 'alert-warning',
+                messages.ERROR: 'alert-danger',
+                }
+
+
+                #######################################
+                #*# envoi mail Gmail de reset #########
+                #######################################
+                EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+                EMAIL_HOST_USER = 'tonemail@gmail.com'
+                EMAIL_HOST = 'smtp.gmail.com'
+                EMAIL_PORT = 587
+                EMAIL_USE_TLS = True
+                EMAIL_HOST_PASSWORD = "motdepasse"
+
+
+dans urls.py
+du projet :
+                from django.contrib import admin
+                from django.urls import path, include
+                urlpatterns = [
+                    path('admin/', admin.site.urls),
+                    path('accounts/', include('accounts.urls'))
+                ]
+                # -----------#*#pour charger une image depuis media vers template  ######
+                from django.conf import settings
+                from django.conf.urls.static import static
+
+                if settings.DEBUG:
+                    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                #  -------------------------------------------------------------------------------------
+
+
+    image profile:______________________________________________________________________________
+accounts.model.py = créer un model profile lié avec user ontoone
+                            image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+                    pip install pillow est requise pour manipuler les images
+                    les images sont stockés dans media/profile.pics  aprés avoir  designer le chemin dans settings
+                    rendu dans admin soit meilleur , aprés avoir register Profile dans admis.py
+                                               def __str__(self):
+                                return f'{self.user.username} profile'
+                    #____________________________________________________________________________
+                    #   #*#  creation profile automatiquemment une fois enregister et se positionner dessus , signals
+                    # _________________________________________________________________________
+                                def create_profile(sender, **kwargs):
+                                    if kwargs['created']:
+                                        user_profile = Profile.objects.create(user=kwargs['instance'])
+
+
+                                post_save.connect(create_profile, sender=User)
+                    # _________________________________________________________________________________
+
+
+
+
+                            \\\\ #*# resize image profile grace a pillow ///
+                               __________________________________________
+                                      def save(self, *args, **kwargs):
+                                      super().save(*args, **kwargs)
+                                      img = Image.open(self.image.path)
+                                      if img.height > 300 or img.width > 300:
+                                        output_size = (300, 300)
+                                        img.thumbnail(output_size)
+                                        img.save(self.image.path)
+
+
+
+accounts.admin.py =                 from accounts.models import Profile
+                                    admin.site.register(Profile)
+
+urls du projet =  # -----------#*#pour charger une image depuis media vers template  ######
+                                from django.conf import settings
+                                from django.conf.urls.static import static
+
+                                if settings.DEBUG:
+                                    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                #  -------------------------------------------------------------------------------------
+
+settings  =     ################################################
+                # #*# media          ##############################
+                ################################################
+                            MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+                            MEDIA_URL = '/media/'
+                #################################################
+
+                \\\\ django_cleanup pour nettoyer le dossier profile_pics ///
+                               __________________________________________
+                        pip install django_cleanup
+                    'django_cleanup.apps.CleanupConfig',
+
+templates  =      <img src = "{{ user.profile.image.url }}" alt="" width="240" height="240">
+
+
+
+requirements.txt  =====>>> pour le créer : pip freeze > requirements.txt
+requirements.txt  =====>>> pour le insttaler : pip install -r requirements.txt
+
+
+    #######################################
+    ###########*# les pluginqs ############
+    #######################################
+    Bootstrap 4
+    Requirements
+    Atom Material Icons
+    CodeGlance
+    Comments Highlighter
+    fr
+    Indent Rainbow
+    ajouter bootstrap-theme + bootstrap.css dans le projet pour avoir autocompletion bootstrap
+    Quick File Preview
+    quicks notes
+

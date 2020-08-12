@@ -32,7 +32,7 @@ def profile_edit(request):
     profile_ = Profile.objects.get(user=request.user)  # get profile qui a user(dans profile) = au user request
     if request.method == 'POST':
         userform = UserForm(request.POST, instance=request.user)
-        profileform = ProfileForm(request.POST, instance=profile_)
+        profileform = ProfileForm(request.POST, request.FILES, instance=profile_)  # request.FILES : pour uplaod file
         if userform.is_valid() and profileform.is_valid():
             userform.save()  # save user directement mais le profile nécessité la suivante
             myform = profileform.save(commit=False)  # s'assurer que le profile est relié au user
