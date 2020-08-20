@@ -16,6 +16,7 @@ def register(request):  # ou appeler  signin
             mon_password = form.cleaned_data['password1']  # extraire password depuis le form
             user = authenticate(username=mon_username, password=mon_password)  # préparer le user
             login(request, user)  # faire le login
+            messages.success(request, 'created') # qui sera affiché dans redirect template
             return redirect('/accounts/profile')  # redirect vers ...
     else:  # show form
         form = SignupForm()
@@ -40,7 +41,7 @@ def profile_edit(request):
             myform = profileform.save(commit=False)  # s'assurer que le profile est relié au user
             myform.user = request.user  # s'assurer que le profile est relié au user
             myform.save()  # save profile
-            messages.success(request, 'updated')
+            messages.success(request, 'updated')  # qui sera affiché dans redirect template
             return redirect('accounts:profile')
     else:  # (affichage)
         userform = UserForm(instance=request.user)  # request.user = data du user connecté (affichage)
