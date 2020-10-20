@@ -4,6 +4,18 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Sign up - register </button>
+        <button type="submit">Sign up - register</button>
+        <span id='message'></span> {# password same or not #}
     </form>
 {% endblock %}
+
+{% block javascript %}
+    <script>
+        $('#id_password1, #id_password2').on('keyup', function () {     {# password same or not #}
+            if ($('#id_password1').val() == $('#id_password2').val()) {  {# password same or not #}
+                $('#message').html('password same').css('color', 'green'); {# password same or not #}
+            } else {# password same or not #}
+                $('#message').html('password not same').css('color', 'red'); {# password same or not #}
+        });   {# password same or not #}
+    </script> {# password same or not #}
+{% endblock javascript %}
