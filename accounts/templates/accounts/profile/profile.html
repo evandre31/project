@@ -2,11 +2,7 @@
 
 {% block content %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success"><h1 class="text-center">{{ message }}</h1></div>
-        {% endfor %}
-    {% endif %}
+{% include 'snippets/flash_message.html' %}
 
     <h3>profile</h3>
 <p><strong>données issus de user ___________________</strong></p>

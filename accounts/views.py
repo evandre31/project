@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, Http404
@@ -10,7 +9,6 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.template.loader import render_to_string
 from .token import activation_token
 from django.core.mail import send_mail
-
 from accounts.forms import SignupForm, UserForm, ProfileForm
 from accounts.models import Profile
 
@@ -23,7 +21,7 @@ def register(request):  # ou appeler  signin
             user.is_active = False
             user.save()
             site = get_current_site(request)
-            mail_subject = 'confirmation message for '
+            mail_subject = 'confirmation message for foueds site '
             message = render_to_string('accounts/registration/confirm_email.html',
                                        {'user': user,
                                         'domain': site.domain,
@@ -35,17 +33,15 @@ def register(request):  # ou appeler  signin
             from_email = settings.EMAIL_HOST_USER
             recipient_list = [to_email]
             send_mail(mail_subject, message, from_email, recipient_list, fail_silently=True)
-            return HttpResponse('merci de t avoir inscript, verifie ton mail')
+            return redirect('/accounts/register/activate_mail_sent')
 
-            # mon_username = form.cleaned_data['username']  # extraire username depuis le form
-            # mon_password = form.cleaned_data['password1']  # extraire password depuis le form
-            # user = authenticate(username=mon_username, password=mon_password)  # préparer le user
-            # login(request, user)  # faire le login
-            # messages.success(request, 'created')  # qui sera affiché dans redirect template
-            # return redirect('/accounts/profile')  # redirect vers ...
     else:  # show form
         form = SignupForm()
     return render(request, 'accounts/registration/register.html', {'form': form})
+
+
+def activate_mail_sent(request):
+    return render(request, 'accounts/registration/activate_mail_sent.html', {})
 
 
 @login_required
@@ -74,20 +70,6 @@ def profile_edit(request):
     return render(request, 'accounts/profile/edit_profile.html', {'userform': userform, 'profileform': profileform})
 
 
-# def change_password(request):
-#     if request.method == 'POST':
-#         form = PasswordChangeForm(request.user, request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             update_session_auth_hash(request, user)  # Important! conserver la session aprés le changement
-#             # messages.success(request, 'Your password was successfully updated!')
-#             return redirect('/accounts/profile')
-#         else:
-#             return redirect('/accounts/change_password')
-#     else:
-#         form = PasswordChangeForm(request.user)
-#     return render(request, 'accounts/registration/change_password.html', {'form': form})
-
 def activate(request, uid, token):
     try:
         user = get_object_or_404(User, pk=uid)
@@ -97,10 +79,7 @@ def activate(request, uid, token):
         user.is_active = True
         user.save()
         login(request, user)
-        messages.success(request, 'your account is activated')
+        messages.success(request, 'your account is activated , welcome on my site')
         return redirect('/accounts/profile')
     else:
         return HttpResponse("<h3>Invalid activation link</h3>")
-
-
-
