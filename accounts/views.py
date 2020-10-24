@@ -1,8 +1,16 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.template.loader import render_to_string
+from .token import activation_token
+from django.core.mail import send_mail
+
 from accounts.forms import SignupForm, UserForm, ProfileForm
 from accounts.models import Profile
 
@@ -11,13 +19,30 @@ def register(request):  # ou appeler  signin
     if request.method == 'POST':  # save
         form = SignupForm(request.POST)
         if form.is_valid():  # si valide  alors save
-            form.save()  # save le new user  mais sans login
-            mon_username = form.cleaned_data['username']  # extraire username depuis le form
-            mon_password = form.cleaned_data['password1']  # extraire password depuis le form
-            user = authenticate(username=mon_username, password=mon_password)  # préparer le user
-            login(request, user)  # faire le login
-            messages.success(request, 'created') # qui sera affiché dans redirect template
-            return redirect('/accounts/profile')  # redirect vers ...
+            user = form.save(commit=False)  # save le new user  mais sans login
+            user.is_active = False
+            user.save()
+            site = get_current_site(request)
+            mail_subject = 'confirmation message for '
+            message = render_to_string('accounts/registration/confirm_email.html',
+                                       {'user': user,
+                                        'domain': site.domain,
+                                        'uid': user.id,
+                                        'token': activation_token.make_token(user)}
+                                       )
+            to_email = form.cleaned_data.get('email')
+            to_list = [to_email]
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [to_email]
+            send_mail(mail_subject, message, from_email, recipient_list, fail_silently=True)
+            return HttpResponse('merci de t avoir inscript, verifie ton mail')
+
+            # mon_username = form.cleaned_data['username']  # extraire username depuis le form
+            # mon_password = form.cleaned_data['password1']  # extraire password depuis le form
+            # user = authenticate(username=mon_username, password=mon_password)  # préparer le user
+            # login(request, user)  # faire le login
+            # messages.success(request, 'created')  # qui sera affiché dans redirect template
+            # return redirect('/accounts/profile')  # redirect vers ...
     else:  # show form
         form = SignupForm()
     return render(request, 'accounts/registration/register.html', {'form': form})
@@ -48,6 +73,7 @@ def profile_edit(request):
         profileform = ProfileForm(instance=profile_)  # profile_ = profile du user connecté  (affichage)
     return render(request, 'accounts/profile/edit_profile.html', {'userform': userform, 'profileform': profileform})
 
+
 # def change_password(request):
 #     if request.method == 'POST':
 #         form = PasswordChangeForm(request.user, request.POST)
@@ -61,3 +87,20 @@ def profile_edit(request):
 #     else:
 #         form = PasswordChangeForm(request.user)
 #     return render(request, 'accounts/registration/change_password.html', {'form': form})
+
+def activate(request, uid, token):
+    try:
+        user = get_object_or_404(User, pk=uid)
+    except:
+        raise Http404("No user found")
+    if user is not None and activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        messages.success(request, 'your account is activated')
+        return redirect('/accounts/profile')
+    else:
+        return HttpResponse("<h3>Invalid activation link</h3>")
+
+
+
