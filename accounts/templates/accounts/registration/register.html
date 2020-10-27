@@ -1,25 +1,30 @@
 {% extends 'base.html' %}
+
 {% block content %}
     <h2>Django - Create User Sign Up</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Sign up - register</button>
-        <span id='message'></span> {# password same or not #}
     </form>
 {% endblock %}
 
 {% block javascript %}
     <script>
+        password1 = document.getElementById('id_password1');{# password same or not #}
+        password2 = document.getElementById('id_password2');
+        message = document.createElement("span");
+        message.id = 'message';
+        message.classList.add('classemessage');
+        message2 = message.cloneNode(true);
+        password1.parentNode.appendChild(message);
+        password2.parentNode.appendChild(message2);
         $('#id_password1, #id_password2').on('keyup', function () {     {# password same or not #}
-            if ($('#id_password1').val() == $('#id_password2').val()) {  {# password same or not #}
-                $('#message').html('password same').css('color', 'green'); {# password same or not #}
+            if ($('#id_password1').val() === $('#id_password2').val()) {
+                $('#message,classemessage').html('password same').css('color', 'green');
             } else {# password same or not #}
-                $('#message').html('password not same').css('color', 'red'); {# password same or not #}
-        });{# password same or not #}
-        ici=document.getElementById('id_password1'){# password same or not #}
-        msg=document.getElementById('message'){# password same or not #}
-        ici.parentNode.appendChild(msg);{# deplacer message aprés input password1 #}
+                $('#message,classemessage').html('password not same').css('color', 'red');
+        });
     </script> {# password same or not #}
-
+    <style>.classemessage {background-color: #1bbb41;}</style>
 {% endblock javascript %}
