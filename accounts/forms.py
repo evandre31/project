@@ -5,6 +5,8 @@ from .models import Profile
 
 
 class SignupForm(UserCreationForm):  # pour register
+    email = forms.EmailField(required=True, max_length=100)  # pour que email soit required
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
@@ -20,7 +22,7 @@ class SignupForm(UserCreationForm):  # pour register
 class UserForm(forms.ModelForm):  # form pour user update
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['username', 'first_name', 'last_name']
 
 
 class ProfileForm(forms.ModelForm):  # form pour profile update
