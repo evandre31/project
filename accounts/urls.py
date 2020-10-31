@@ -14,6 +14,8 @@ urlpatterns = [
          auth_views.LogoutView.as_view(template_name='accounts/registration/logged_out.html'),
          name='logout'),
     path('register/', views.register, name='register'),
+    path('register/validate_username/', views.validate_username, name='validate_username'),
+
     path('register/activate_mail_sent', views.activate_mail_sent, name='activate_mail_sent'),
     path('activate/<uid>/<token>/', views.activate, name='activate'),
 

@@ -2,7 +2,8 @@
 
 {% block content %}
     <h2>Django - Create User Sign Up</h2>
-    <form method="post">
+    <span id="user_error" style="display: none"></span>
+    <form method="post" data-validate-username-url="{% url 'accounts:validate_username'%}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Sign up - register</button>
@@ -10,12 +11,13 @@
 {% endblock %}
 
 {% block javascript %}
+    {# password same or not #}
     <script>
         password1 = document.getElementById('id_password1');{# password same or not #}
         password2 = document.getElementById('id_password2');
         message = document.createElement("span");
         message.id = 'message';
-        message.classList.add('classemessage');
+        message.classList.add('classe_message');
         message2 = message.cloneNode(true);
         password1.parentNode.appendChild(message);
         password2.parentNode.appendChild(message2);
@@ -26,5 +28,26 @@
                 $('#message,classemessage').html('password not same').css('color', 'red');
         });
     </script> {# password same or not #}
-    <style>.classemessage {background-color: #1bbb41;}</style>
+    <style>.classe_message {background-color: #1bbb41;}</style>
+
+    {# check username #}
+    <script>
+        $('#id_username').keyup(function ggggggg () {    {# check username #}
+            var username = $(this).val();
+            var form = $(this).closest("form");
+            $.ajax({
+                url:form.attr("data-validate-username-url"),
+                data:form.serialize(),
+                dataType: 'json',
+                success:function(data){
+                    if (data.is_taken){
+                        $('#user_error').text(data.error_message);
+                        $("#user_error").css("display","block");
+                    } else {
+                        $("#user_error").css("display", "none");
+                    }
+                }
+            });
+        });
+    </script> {#  end check username #}
 {% endblock javascript %}

@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.template.loader import render_to_string
@@ -38,6 +38,15 @@ def register(request):  # ou appeler  signin
     else:  # show form
         form = SignupForm()
     return render(request, 'accounts/registration/register.html', {'form': form})
+
+
+def validate_username(request):
+    username = request.GET.get('username')
+    is_taken = User.objects.filter(username__iexact=username).exists()
+    data = {'is_taken': is_taken}
+    if data['is_taken']:
+        data['error_message'] = "The username already taken"
+    return JsonResponse(data)
 
 
 def activate_mail_sent(request):
