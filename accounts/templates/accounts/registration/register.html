@@ -1,13 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <h2>Django - Create User Sign Up</h2>
     <form method="post" data-validate-username-url="{% url 'accounts:validate_username' %}"
           data-validate-email-url="{% url 'accounts:validate_email_register' %}">
         {% csrf_token %}
         {{ form.as_p }}
+        <span>
+            <i class="fa fa-eye" aria-hidden="true" id="eye" onclick="toggle()"></i>
+        </span><br><br>
         <button type="submit">Sign up - register</button>
     </form>
+
+    <style>.classe_message {
+        background-color: #1bbb41;
+    }
+
+    span {
+        right: 15px;
+        transform: translate(0, -50%);
+        top: 50%;
+        cursor: pointer;
+    }
+
+    .fa {
+        font-size: 20px;
+        color: #7a797e;
+    }
+    </style>
 {% endblock %}
 
 {% block javascript %}
@@ -34,7 +56,7 @@
 
     <!-- check username -->
     <script> {# debut check username #}
-    $('#id_username').on('keyup input',function CheckUsername() {    // cibler event de input
+    $('#id_username').on('keyup input', function CheckUsername() {    // cibler event de input
         const username = $(this).val(); //val de input qui va être envoyé au view
         const username_Ele = document.getElementById('id_username'); // cibler input
         const message_user = document.createElement("span"); //creation element span et le ciblé
@@ -61,7 +83,7 @@
 
     <!-- check email -->
     <script> {# debut check email #}
-    $('#id_email').on('keyup input',function CheckEmail() { // check email
+    $('#id_email').on('keyup input', function CheckEmail() { // check email
         const email = $(this).val();
         const email_Ele = document.getElementById('id_email');
         const message_email = document.createElement("span");
@@ -85,4 +107,22 @@
         });
     });
     </script> {#  end check email #}
+
+    {#  Show/Hide Password Toggle With Javascript #}
+    <script>
+        let state = false;
+        function toggle() {
+            if (state) {
+                document.getElementById("id_password1").setAttribute("type", "password");
+                document.getElementById("id_password2").setAttribute("type", "password");
+                document.getElementById("eye").style.color = '#91922b';
+                state = false;
+            } else {
+                document.getElementById("id_password1").setAttribute("type", "text");
+                document.getElementById("id_password2").setAttribute("type", "text");
+                document.getElementById("eye").style.color = '#1b1fef';
+                state = true;
+            }
+        }
+    </script>{#  end Show/Hide Password Toggle With Javascript #}
 {% endblock javascript %}
