@@ -15,6 +15,7 @@ urlpatterns = [
          name='logout'),
     path('register/', views.register, name='register'),
     path('register/validate_username/', views.validate_username, name='validate_username'),
+    path('register/validate_email_register/', views.validate_email_register, name='validate_email_register'),
 
     path('register/activate_mail_sent', views.activate_mail_sent, name='activate_mail_sent'),
     path('activate/<uid>/<token>/', views.activate, name='activate'),

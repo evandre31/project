@@ -50,6 +50,16 @@ def validate_username(request):
     return JsonResponse(data)
 
 
+# check email  for register.html
+def validate_email_register(request):
+    email = request.GET.get('email')
+    is_taken = User.objects.filter(email__iexact=email).exists()
+    data = {'is_taken': is_taken}
+    if data['is_taken']:
+        data['error_message'] = "The email already taken"
+    return JsonResponse(data)
+
+
 # check email for password_reset_form.html
 def validate_email(request):
     email = request.GET.get('email')

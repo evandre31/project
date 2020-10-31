@@ -3,7 +3,8 @@
 {% block content %}
     <h2>Django - Create User Sign Up</h2>
     <span id="user_error" style="display: none"></span>
-    <form method="post" data-validate-username-url="{% url 'accounts:validate_username'%}">
+    <span id="email_error" style="display: none"></span>
+    <form method="post" data-validate-username-url="{% url 'accounts:validate_username'%}" data-validate-email-url="{% url 'accounts:validate_email_register'%}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Sign up - register</button>
@@ -50,4 +51,25 @@
             });
         });
     </script> {#  end check username #}
+
+{# check email #}
+<script>
+    $('#id_email').keyup(function gggggggg () {    {# check username #}
+        var email = $(this).val();
+        var form = $(this).closest("form");
+        $.ajax({
+            url:form.attr("data-validate-email-url"),
+            data:form.serialize(),
+            dataType: 'json',
+            success:function(data){
+                if (data.is_taken){
+                    $('#email_error').text(data.error_message);
+                    $("#email_error").css("display","block");
+                } else {
+                    $("#email_error").css("display", "none");
+                }
+            }
+        });
+    });
+</script> {#  end check username #}
 {% endblock javascript %}
