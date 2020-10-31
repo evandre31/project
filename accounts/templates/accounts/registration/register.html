@@ -34,7 +34,7 @@
 
     <!-- check username -->
     <script> {# debut check username #}
-    $('#id_username').keyup(function CheckUsername() {    // cibler event de input
+    $('#id_username').on('keyup input',function CheckUsername() {    // cibler event de input
         const username = $(this).val(); //val de input qui va être envoyé au view
         const username_Ele = document.getElementById('id_username'); // cibler input
         const message_user = document.createElement("span"); //creation element span et le ciblé
@@ -61,7 +61,7 @@
 
     <!-- check email -->
     <script> {# debut check email #}
-    $('#id_email').keyup(function CheckEmail() { // check email
+    $('#id_email').on('keyup input',function CheckEmail() { // check email
         const email = $(this).val();
         const email_Ele = document.getElementById('id_email');
         const message_email = document.createElement("span");

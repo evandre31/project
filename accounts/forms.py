@@ -22,7 +22,7 @@ class SignupForm(UserCreationForm):  # pour register
 class UserForm(forms.ModelForm):  # form pour user update
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name']
+        fields = ['first_name', 'last_name']
 
 
 class ProfileForm(forms.ModelForm):  # form pour profile update
