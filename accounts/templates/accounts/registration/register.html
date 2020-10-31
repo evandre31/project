@@ -2,9 +2,8 @@
 
 {% block content %}
     <h2>Django - Create User Sign Up</h2>
-    <span id="user_error" style="display: none"></span>
-    <span id="email_error" style="display: none"></span>
-    <form method="post" data-validate-username-url="{% url 'accounts:validate_username'%}" data-validate-email-url="{% url 'accounts:validate_email_register'%}">
+    <form method="post" data-validate-username-url="{% url 'accounts:validate_username' %}"
+          data-validate-email-url="{% url 'accounts:validate_email_register' %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Sign up - register</button>
@@ -13,63 +12,77 @@
 
 {% block javascript %}
     {# password same or not #}
-    <script>
-        password1 = document.getElementById('id_password1');{# password same or not #}
-        password2 = document.getElementById('id_password2');
-        message = document.createElement("span");
-        message.id = 'message';
-        message.classList.add('classe_message');
-        message2 = message.cloneNode(true);
-        password1.parentNode.appendChild(message);
-        password2.parentNode.appendChild(message2);
-        $('#id_password1, #id_password2').on('keyup', function () {     {# password same or not #}
-            if ($('#id_password1').val() === $('#id_password2').val()) {
-                $('#message,classemessage').html('password same').css('color', 'green');
-            } else {# password same or not #}
-                $('#message,classemessage').html('password not same').css('color', 'red');
-        });
+    <script>{# password same or not #}
+    password1 = document.getElementById('id_password1'); // password same or not
+    password2 = document.getElementById('id_password2');
+    message = document.createElement("span");
+    message.id = 'message';
+    message.classList.add('classe_message');
+    message2 = message.cloneNode(true);
+    password1.parentNode.appendChild(message);
+    password2.parentNode.appendChild(message2);
+    $('#id_password1, #id_password2').on('keyup', function () {     // password same or not
+        if ($('#id_password1').val() === $('#id_password2').val()) {
+            $('#message,classemessage').html('password same').css('color', 'green');
+        } else {# password same or not #}
+            $('#message,classemessage').html('password not same').css('color', 'red');
+    });
     </script> {# password same or not #}
-    <style>.classe_message {background-color: #1bbb41;}</style>
+    <style>.classe_message {
+        background-color: #1bbb41;
+    }</style>
 
-    {# check username #}
-    <script>
-        $('#id_username').keyup(function ggggggg () {    {# check username #}
-            var username = $(this).val();
-            var form = $(this).closest("form");
-            $.ajax({
-                url:form.attr("data-validate-username-url"),
-                data:form.serialize(),
-                dataType: 'json',
-                success:function(data){
-                    if (data.is_taken){
-                        $('#user_error').text(data.error_message);
-                        $("#user_error").css("display","block");
-                    } else {
-                        $("#user_error").css("display", "none");
-                    }
-                }
-            });
-        });
-    </script> {#  end check username #}
-
-{# check email #}
-<script>
-    $('#id_email').keyup(function gggggggg () {    {# check username #}
-        var email = $(this).val();
-        var form = $(this).closest("form");
+    <!-- check username -->
+    <script> {# debut check username #}
+    $('#id_username').keyup(function CheckUsername() {    // cibler event de input
+        const username = $(this).val(); //val de input qui va être envoyé au view
+        const username_Ele = document.getElementById('id_username'); // cibler input
+        const message_user = document.createElement("span"); //creation element span et le ciblé
+        message_user.id = 'id_message_user'; //creation element span : ajout attr
+        message_user.classList.add('classe_message_user'); //creation element span  : ajout attr
+        message_user.style = "display: none"; //creation element span  : ajout attr
+        username_Ele.parentNode.appendChild(message_user); //ajout element crée aprés input ciblé
+        const form = $(this).closest("form"); //cible form
         $.ajax({
-            url:form.attr("data-validate-email-url"),
-            data:form.serialize(),
+            url: form.attr("data-validate-username-url"),
+            data: form.serialize(),
             dataType: 'json',
-            success:function(data){
-                if (data.is_taken){
-                    $('#email_error').text(data.error_message);
-                    $("#email_error").css("display","block");
+            success: function (data) {
+                if (data.is_taken) {
+                    $('#id_message_user').text(data.error_message);//text du span ajouté venu de view
+                    $("#id_message_user").css("display", "block");
                 } else {
-                    $("#email_error").css("display", "none");
+                    $("#id_message_user").css("display", "none");
                 }
             }
         });
     });
-</script> {#  end check username #}
+    </script> {# end check username #}
+
+    <!-- check email -->
+    <script> {# debut check email #}
+    $('#id_email').keyup(function CheckEmail() { // check email
+        const email = $(this).val();
+        const email_Ele = document.getElementById('id_email');
+        const message_email = document.createElement("span");
+        message_email.id = 'id_message_email';
+        message_email.classList.add('classe_message_email');
+        message_email.style = "display: none";
+        email_Ele.parentNode.appendChild(message_email);
+        const form = $(this).closest("form");
+        $.ajax({
+            url: form.attr("data-validate-email-url"),
+            data: form.serialize(),
+            dataType: 'json',
+            success: function (data) {
+                if (data.is_taken) {
+                    $('#id_message_email').text(data.error_message);
+                    $("#id_message_email").css("display", "block");
+                } else {
+                    $("#id_message_email").css("display", "none");
+                }
+            }
+        });
+    });
+    </script> {#  end check email #}
 {% endblock javascript %}
