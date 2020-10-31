@@ -40,12 +40,25 @@ def register(request):  # ou appeler  signin
     return render(request, 'accounts/registration/register.html', {'form': form})
 
 
+# check username  for register.html
 def validate_username(request):
     username = request.GET.get('username')
     is_taken = User.objects.filter(username__iexact=username).exists()
     data = {'is_taken': is_taken}
     if data['is_taken']:
         data['error_message'] = "The username already taken"
+    return JsonResponse(data)
+
+
+# check email for password_reset_form.html
+def validate_email(request):
+    email = request.GET.get('email')
+    email_exist = User.objects.filter(email__iexact=email).exists()
+    data = {'email_exist': email_exist}
+    if data['email_exist']:
+        data['error_message'] = "email existe dans la bd"
+    else:
+        data['error_message'] = "email nexiste pas"
     return JsonResponse(data)
 
 

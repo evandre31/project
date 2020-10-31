@@ -41,6 +41,8 @@ urlpatterns = [
          auth_views.PasswordResetDoneView.as_view(
              template_name='accounts/registration/password_reset_done.html'),
          name="password_reset_done"),
+    path('password_reset/validate_email/', views.validate_email, name='validate_email'),
+
     path('password_reset_confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
         template_name='accounts/registration/password_reset_confirm.html',
         success_url='/accounts/password_reset_complete'),
