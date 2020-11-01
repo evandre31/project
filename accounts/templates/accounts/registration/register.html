@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block javascript %}
-    {# password same or not #}
+
     <script>{# password same or not #}
     password1 = document.getElementById('id_password1'); // password same or not
     password2 = document.getElementById('id_password2');
@@ -44,9 +44,9 @@
         } else {# password same or not #}
             $('#message,classemessage').html('password not same').css('color', 'red');
     });
+
     </script> {# password same or not #}
 
-    <!-- check username -->
     <script> {# debut check username #}
     $('#id_username').on('keyup input', function CheckUsername() {    // cibler event de input
         const username = $(this).val(); //val de input qui va être envoyé au view
@@ -74,7 +74,6 @@
     });
     </script> {# end check username #}
 
-    <!-- check email -->
     <script> {# debut check email #}
     $('#id_email').on('keyup input', function CheckEmail() { // check email
         const email = $(this).val();
@@ -102,7 +101,6 @@
     });
     </script> {#  end check email #}
 
-    {#  Show/Hide Password Toggle With Javascript #}
     <script>
         let state = false;
 
@@ -186,5 +184,27 @@
         return pass2Val.length > 7;
     }
     </script>{#  end validate password2 #}
+
+    <script>{#  validate username #}
+    const monUsername = $('#id_username');
+    const spanValUserele = '<span style="color: #ded648" id="id_spanValUser"></span>';
+    monUsername.after(spanValUserele);
+    const spanValUser = $('#id_spanValUser');
+    monUsername.keyup(function () {
+        if (validateUsername()) {
+            monUsername.css("border", "2px solid green");
+            spanValUser.html("<p class='text-success'>Password validated</p>");
+        } else {
+            monUsername.css("border", "2px solid red");
+            spanValUser.html("<p class='text-danger'>Password not valid</p>");
+        }
+    });
+
+    function validateUsername() {
+        const usernameVal = monUsername.val();
+        return usernameVal.length > 3;
+    }
+    </script>{#  end validate username #}
+
 {% endblock javascript %}
 
