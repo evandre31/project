@@ -2,7 +2,6 @@
 
 {% block content %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <h2>Django - Create User Sign Up</h2>
     <form method="post" data-validate-username-url="{% url 'accounts:validate_username' %}"
           data-validate-email-url="{% url 'accounts:validate_email_register' %}">
@@ -12,23 +11,25 @@
             <i class="fa fa-eye" aria-hidden="true" id="eye" onclick="toggle()"></i>
         </span><br><br>
         <button type="submit">Sign up - register</button>
+        <span id="emailMsg"></span>
     </form>
 
-    <style>.classe_message {
-        background-color: #1bbb41;
-    }
+    <style>
+        .classe_message {
+            background-color: #1bbb41;
+        }
 
-    span {
-        right: 15px;
-        transform: translate(0, -50%);
-        top: 50%;
-        cursor: pointer;
-    }
+        span {
+            right: 15px;
+            transform: translate(0, -50%);
+            top: 50%;
+            cursor: pointer;
+        }
 
-    .fa {
-        font-size: 20px;
-        color: #7a797e;
-    }
+        .fa {
+            font-size: 20px;
+            color: #7a797e;
+        }
     </style>
 {% endblock %}
 
@@ -50,9 +51,6 @@
             $('#message,classemessage').html('password not same').css('color', 'red');
     });
     </script> {# password same or not #}
-    <style>.classe_message {
-        background-color: #1bbb41;
-    }</style>
 
     <!-- check username -->
     <script> {# debut check username #}
@@ -63,6 +61,7 @@
         message_user.id = 'id_message_user'; //creation element span : ajout attr
         message_user.classList.add('classe_message_user'); //creation element span  : ajout attr
         message_user.style = "display: none"; //creation element span  : ajout attr
+        message_user.style.color = "red"; //creation element span  : ajout attr
         username_Ele.parentNode.appendChild(message_user); //ajout element crée aprés input ciblé
         const form = $(this).closest("form"); //cible form
         $.ajax({
@@ -89,7 +88,8 @@
         const message_email = document.createElement("span");
         message_email.id = 'id_message_email';
         message_email.classList.add('classe_message_email');
-        message_email.style = "display: none";
+        message_email.style.display = "none";
+        message_email.style.color = "red";
         email_Ele.parentNode.appendChild(message_email);
         const form = $(this).closest("form");
         $.ajax({
@@ -111,6 +111,7 @@
     {#  Show/Hide Password Toggle With Javascript #}
     <script>
         let state = false;
+
         function toggle() {
             if (state) {
                 document.getElementById("id_password1").setAttribute("type", "password");
@@ -125,4 +126,24 @@
             }
         }
     </script>{#  end Show/Hide Password Toggle With Javascript #}
+
+    <script>{#  validate email #}
+        $(document).ready(function () {
+            $('#id_email').on('keyup input',function () {
+                email2 = $('#id_email').val();
+                if (validateEmail()) {
+                    $("#id_email").css("border", "2px solid green");
+                    $("#emailMsg").html("<p class='text-success'>Validated</p>");
+                } else {
+                    $("#id_email").css("border", "2px solid red");
+                    $("#emailMsg").html("<p class='text-danger'>Un-validated</p>");
+                }
+            });
+        });
+        function validateEmail() {
+            email2 = $('#id_email').val();
+            const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+            return reg.test(email2);
+        }
+    </script>{#  end validate email #}
 {% endblock javascript %}
