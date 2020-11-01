@@ -134,3 +134,14 @@ requirements.txt  =====>>> pour le insttaler : pip install -r requirements.txt
     Quick File Preview
     quicks notes
 
+    #############################################################
+    #########*# ajouter un element apres un autre jquery ########
+    #############################################################
+    <script>
+        var span1='<span style="color: #de332b" class="maclasse">le texte</span>';
+        $(document).ready(function () {
+            $("#hhh").click(function () {
+                $('#id_username').after(span1)
+            })
+        })
+    </script>
