@@ -10,14 +10,9 @@
             <i class="fa fa-eye" aria-hidden="true" id="eye" onclick="toggle()"></i>
         </span><br><br>
         <button type="submit">Sign up - register</button>
-        <span id="passMsg1">hhhh</span>
     </form>
 
     <style>
-        .classe_message {
-            background-color: #1bbb41;
-        }
-
         span {
             right: 15px;
             transform: translate(0, -50%);
@@ -152,7 +147,9 @@
 
     <script>{#  validate password1 #}
     const pass1ele = $('#id_password1');
-    const passMsg1 = $('#passMsg1');
+    const spanvalpss1 = '<span style="color: #ded648" id="id_spanvalpss1"></span>';
+    pass1ele.after(spanvalpss1);
+    const passMsg1 = $('#id_spanvalpss1');
     pass1ele.keyup(function () {
         if (validatePassword()) {
             pass1ele.css("border", "2px solid green");
@@ -168,5 +165,26 @@
         return pass1Val.length > 7;
     }
     </script>{#  end validate password1 #}
+
+    <script>{#  validate password2 #}
+    const pass2ele = $('#id_password2');
+    const spanvalpss2 = '<span style="color: #ded648" id="id_spanvalpss2"></span>';
+    pass2ele.after(spanvalpss2);
+    const passMsg2 = $('#id_spanvalpss2');
+    pass2ele.keyup(function () {
+        if (validatePassword2()) {
+            pass2ele.css("border", "2px solid green");
+            passMsg2.html("<p class='text-success'>Password validated</p>");
+        } else {
+            pass2ele.css("border", "2px solid red");
+            passMsg2.html("<p class='text-danger'>Password not valid</p>");
+        }
+    });
+
+    function validatePassword2() {
+        const pass2Val = pass2ele.val();
+        return pass2Val.length > 7;
+    }
+    </script>{#  end validate password2 #}
 {% endblock javascript %}
 
