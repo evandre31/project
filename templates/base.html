@@ -2,26 +2,20 @@
 <html lang="en">
 
 <head>
-    {% include "snippets/header.html" %}
-    <title>Title</title>
-    <style type="text/css"> {# agrandir body pour que footer soit toujours en bas #}
-    .main {
-        min-height: 100vh;
-        height: 100%;
-    }
-    </style><!-- agrandir body 'main' pour que footer soit toujours en bas -->
-
+    {% include "snippets/head.html" %}
+    <title>{% block title %}base{% endblock title %}</title>
 </head>
 
 <body>
+<header>
     {% include "snippets/navbar.html" %}
-    <div class="container">{% block content %}{% endblock content %}</div>
+</header>
+<div class="container">{% block content %}{% endblock content %}</div>
 
-</body>
 
 <footer>
     {% include "snippets/footer.html" %}
     {% block javascript %}{% endblock javascript %}
 </footer>
-
+</body>
 </html>
