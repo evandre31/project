@@ -3,14 +3,14 @@
 {% block title %}register{% endblock title %}
 {% block content %}
     <h2>Django - Create User Sign Up</h2>
-    <form method="post" data-validate-username-url="{% url 'accounts:validate_username' %}"
-          data-validate-email-url="{% url 'accounts:validate_email_register' %}">
+    <form method="post" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
+{% include 'accounts/snippets/form.html' %}
+
         <span>
             <i class="fa fa-eye" aria-hidden="true" id="eye" onclick="toggle()"></i>
         </span><br><br>
-        <button type="submit">Sign up - register</button>
+        <button type="submit" class="btn btn-primary btn-block">Sign up - register</button>
     </form>
 
     <style>
@@ -30,6 +30,6 @@
 
 {% block javascript %}
 
-<script src="{% static 'accounts/js/register.js' %}"></script>
+    <script src="{% static 'accounts/js/register.js' %}"></script>
 {% endblock javascript %}
 

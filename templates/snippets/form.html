@@ -1,0 +1,22 @@
+{% load widget_tweaks %}
+
+{% for field in form %}
+    <div class="form-group">
+        {{ field.label_tag }} <!-- label dans le field -->
+        {% if form.is_bound %} <!-- si le form contient des données -->
+            {% if field.errors %} <!-- si le field contient des errors -->
+                {% render_field field class="form-control is-invalid" %}
+                {% for error in field.errors %} <!-- afficher les errors -->
+                    <div class="invalid-feedback">{{ error }}</div> <!-- afficher les errors -->
+                {% endfor %} <!-- afficher les errors -->
+            {% else %} <!-- si le field ne  contient pas des errors -->
+                {% render_field field class="form-control is-valid" %}<!--  pas des errors -->
+            {% endif %}
+        {% else %}
+            {% render_field field class="form-control" %}<!--get field-->
+        {% endif %}
+        {% if field.help_text %} <!--si help_text-->
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+    </div>
+{% endfor %}
