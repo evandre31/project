@@ -11,11 +11,17 @@ class SignupForm(UserCreationForm):  # pour register
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
-    def clean_email(self):  # pour que email soit unique
+    def clean_email(self):  # validation de email dans register
         email = self.cleaned_data.get('email')
-        username = self.cleaned_data.get('username')
-        if email and User.objects.filter(email=email).exclude(username=username).exists():
-            raise forms.ValidationError(u'Email addresses must be unique.')
+        with open("accounts/disposable-email-provider-domains", 'r') as f:  # fichier content provider
+            blacklist = f.read().splitlines()
+        for disposable_email in blacklist:
+            if disposable_email in email:  # si email est dans blacklist
+                raise forms.ValidationError('nta mareg %s' % disposable_email)  # envoyer error msg
+            else:  # si email n'est pas dans blacklist alors verifier dans la database
+                username = self.cleaned_data.get('username')
+                if email and User.objects.filter(email=email).exclude(username=username).exists():
+                    raise forms.ValidationError(u'Email addresses must be unique.')  # email exist error msg
         return email
 
 

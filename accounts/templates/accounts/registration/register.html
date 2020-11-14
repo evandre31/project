@@ -3,9 +3,10 @@
 {% block title %}register{% endblock title %}
 {% block content %}
     <h2>Django - Create User Sign Up</h2>
-    <form method="post" novalidate>
+    <form method="post" id="id_form_register" novalidate
+          data-validate-username-url="{% url 'accounts:validate_username' %}">
         {% csrf_token %}
-{% include 'accounts/snippets/form.html' %}
+        {% include 'accounts/snippets/form.html' %}
 
         <span>
             <i class="fa fa-eye" aria-hidden="true" id="eye" onclick="toggle()"></i>
