@@ -1,49 +1,75 @@
-const username_ele = $("#id_username"); //username input
-const form = $("#id_form_register").closest("form"); //cible form
-const error_msg = $('#id_error'); //small in form.html
-const username_val = username_ele.val();
+const formRegister = $("#id_form_register"); //cibler form
+moveErrorServer(); //déplacer erreur du serveur (activer function)
 
 
-// username_ele.on('keyup input', function () {
-//     checkUsername();
-// });
-//
-// function checkUsername() {
-//     username_ele.removeClass('is-valid is-invalid');
-//     const username = username_ele.val();
-//     $.ajax({
-//         url: form.attr("data-validate-username-url"),
-//         data: form.serialize(),
-//         dataType: 'json',
-//         success: function (data) {
-//             if (data["is_taken"]) {
-//                 error_msg.text(data["error_message"]);
-//                 error_msg.css("display", "block");
-//                 username_ele.addClass('is-invalid');
-//                 username_ele.removeClass('is-valid');
-//             } else {
-//                 error_msg.css("display", "none");
-//                 username_ele.addClass('is-valid');
-//                 username_ele.removeClass('is-invalid');
-//             }
-//         }
-//     });
-// }
-
-
-const spanValUserele = '<span style="color: #de434a" id="id_spanValUser"></span>';
-username_ele.after(spanValUserele);
-const spanValUser = $('#id_spanValUser');
-username_ele.keyup(function () {
-    if (validateUsername()) {
-        username_ele.css("border", "2px solid green");
-        spanValUser.html("<p class='text-success'>username cava</p>");
-    } else {
-        username_ele.css("border", "2px solid red");
-        spanValUser.html("<p class='text-danger'>username trop court</p>");
-    }
+jQuery.validator.setDefaults({
+    debug: false,
+    success: "is-valid",
+    validClass: "is-valid",
+    errorClass: "is-invalid",
 });
 
-function validateUsername() {
-    return username_val.length > 3;
-}
+/* // pour ajouter une méthode
+$.validator.addMethod('pasDeSpace', function (value, element) {
+    return value === '' || value.trim().length !== 0
+}, "espace not autorisé");    */
+
+// pour modifier une méthode existante
+$.validator.methods.email = function (value, element) { //correction validation mail
+    return this.optional(element) || /[a-z]+@[a-z]+\.[a-z]+[a-z]+/.test(value);//correction validation mail
+};//correction validation mail
+
+formRegister.validate({
+    rules: {
+        email: {
+            required: true,
+            email: true,
+            function:deleteErrorServer, //supprimer erreur du serveur (activer function)
+        },
+        username: {
+            required: true,
+            minlength: 3,
+            nowhitespace: true
+        },
+        password1: {
+            required: true,
+            minlength: 6,
+        },
+        password2: {
+            required: true,
+            equalTo: '#id_password1'
+        }
+    },
+    messages: {
+        email: {
+            required: 'email bassif @',
+            email: 'ha goulna email machi...',
+        },
+        username: {
+            required: 'username bassif ',
+            minlength: 'au moins 3 chart pour username',
+            nowhitespace: "pas despace svp"
+        },
+        password1: {
+            required: 'ha dir pw',
+            minlength: 'au moins 6 chart pour pw',
+        },
+        password2: {
+            required: 'entrer confirmation de password',
+            equalTo: 'password nest pas le meme'
+        }
+    },
+    errorPlacement: function (error, element) {
+        error.appendTo(element.parent().children('div').children('div.cls_error'));
+    },
+});
+
+function moveErrorServer() { //déplacer erreur du serveur
+    let erreur = $('#labelerrorserver');
+    let cible = erreur.parent().children('div').children('div.cls_error');
+    erreur.appendTo(cible);
+}//déplacer erreur du serveur
+
+function deleteErrorServer() { //supprimer erreur du serveur
+    $('#labelerrorserver').remove();
+}//supprimer erreur du serveur
