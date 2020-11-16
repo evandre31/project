@@ -16,7 +16,7 @@ $.validator.addMethod('pasDeSpace', function (value, element) {
 
 // pour modifier une méthode existante
 $.validator.methods.email = function (value, element) { //correction validation mail
-    return this.optional(element) || /[a-z]+@[a-z]+\.[a-z]+[a-z]+/.test(value);//correction validation mail
+    return this.optional(element) || /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value);//correction validation mail
 };//correction validation mail
 
 formRegister.validate({
@@ -24,7 +24,10 @@ formRegister.validate({
         email: {
             required: true,
             email: true,
-            function:deleteErrorServer, //supprimer erreur du serveur (activer function)
+            function: {
+                deleteErrorServer, //supprimer erreur du serveur (activer function)
+                deleteErrorFoued, //supprimer erreur du serveur (activer function)
+            },
         },
         username: {
             required: true,
@@ -37,7 +40,8 @@ formRegister.validate({
         },
         password2: {
             required: true,
-            equalTo: '#id_password1'
+            equalTo: '#id_password1',
+            minlength: 6,
         }
     },
     messages: {
@@ -56,13 +60,49 @@ formRegister.validate({
         },
         password2: {
             required: 'entrer confirmation de password',
-            equalTo: 'password nest pas le meme'
+            equalTo: 'password nest pas le meme',
+            minlength: 'au moins 6 chart pour conf pw',
         }
     },
     errorPlacement: function (error, element) {
         error.appendTo(element.parent().children('div').children('div.cls_error'));
     },
 });
+
+const email_input = $("#id_email");
+
+email_input.on('keyup input', function CheckEmail() { // check email
+    const email_Ele = document.getElementById('id_email');
+    const labelMsgEmail_ = document.createElement("label");
+    labelMsgEmail_.id = 'id_labelMsgEmail';
+    labelMsgEmail_.style.display = "none";
+    email_Ele.parentNode.appendChild(labelMsgEmail_);
+    const labelMsgEmail = $('#id_labelMsgEmail');
+    labelMsgEmail.appendTo($('#id_email').parent().children('div').children('div.cls_error'));
+    const form = $(this).closest("form");
+    $.ajax({
+        url: form.attr("data-validate-email-url"),
+        data: form.serialize(),
+        dataType: 'json',
+        success: function (data) {
+            if (data.is_taken) {
+                labelMsgEmail.text(data.error_message);
+                labelMsgEmail.css("display", "block");
+                email_input.addClass('is-invalid');
+                email_input.removeClass('is-valid');
+                deleteErrorJquery();
+                deleteErrorServer();
+            } else {
+                labelMsgEmail.css("display", "none");
+                email_input.addClass('is-valid');
+                email_input.removeClass('is-invalid');
+                deleteErrorFoued();
+                deleteErrorJquery();
+            }
+        }
+    });
+});
+
 
 function moveErrorServer() { //déplacer erreur du serveur
     let erreur = $('#labelerrorserver');
@@ -73,3 +113,11 @@ function moveErrorServer() { //déplacer erreur du serveur
 function deleteErrorServer() { //supprimer erreur du serveur
     $('#labelerrorserver').remove();
 }//supprimer erreur du serveur
+
+function deleteErrorJquery() { //supprimer erreur du Jquery
+    $('#id_email-error').remove();
+}//supprimer erreur du Jquery
+
+function deleteErrorFoued() { //supprimer erreur du foued
+    $('#id_message_email').remove();
+}//supprimer erreur du foued
