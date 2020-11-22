@@ -203,7 +203,7 @@ function moveErrorServer(id) { //déplacer erreur du serveur
 }//déplacer erreur du serveur
 
 
-moveErrorServer('id_password2_labelerrorserver');
 moveErrorServer('id_email_labelerrorserver');
+moveErrorServer('id_password2_labelerrorserver');
 moveErrorServer('id_username_labelerrorserver');
 moveErrorServer('id_password1_labelerrorserver');

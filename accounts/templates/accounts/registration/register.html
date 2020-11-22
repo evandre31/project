@@ -8,11 +8,10 @@
           data-validate-email-url="{% url 'accounts:validate_email_register' %}"
           novalidate>
         {% csrf_token %}
-        {% include 'accounts/snippets/form.html' %}
-
-        <span>
-            <i class="fa fa-eye" aria-hidden="true" id="eye" onclick="toggle()"></i>
-        </span><br><br>
+        {% include 'accounts/snippets/field.html' with field=form.username %}<!--field username -->
+        {% include 'accounts/snippets/field.html' with field=form.email %}<!--field email -->
+        {% include 'accounts/snippets/field_pw.html' with field=form.password1 %}<!--field password1 -->
+        {% include 'accounts/snippets/field_pw.html' with field=form.password2 %}<!--field password2 -->
         <button type="submit" class="btn btn-primary btn-block">Sign up - register</button>
     </form>
 
@@ -23,7 +22,6 @@
             top: 50%;
             cursor: pointer;
         }
-
         .fa {
             font-size: 20px;
             color: #7a797e;
@@ -32,7 +30,6 @@
 {% endblock content %}
 
 {% block javascript %}
-
     <script src="{% static 'accounts/js/register.js' %}"></script>
 {% endblock javascript %}
 
