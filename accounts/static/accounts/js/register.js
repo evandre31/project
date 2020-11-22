@@ -72,7 +72,9 @@ function CheckFieldInDb(field, form, dataUrl) {
         dataType: 'json',
         success: function (data) {
             if (data.is_taken) {
-                setInvalid(field, `${field.name} déja pris`);
+                // language=HTML
+                var login =  `<a href="/accounts/login/">login</a>`;
+                setInvalid(field, `${field.name} : "${field.value}" déja pris ${login}`);
             } else {
                 setValid(field);
             }
@@ -190,7 +192,6 @@ function matchWithRegEx(regEx, field, message) {
         return false;
     }
 }
-
 
 
 function moveErrorServer(id) { //déplacer erreur du serveur
