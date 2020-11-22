@@ -5,7 +5,14 @@ from .models import Profile
 
 
 class SignupForm(UserCreationForm):  # pour register
-    email = forms.EmailField(required=True, max_length=100)  # pour que email soit required
+    username = forms.CharField(widget=forms.TextInput(attrs={'onfocusout': 'validateUserName()'}))
+    email = forms.EmailField(required=True, label='ton mail', max_length=100,
+                             widget=forms.EmailInput
+                             (attrs={'onfocusout': 'validateEmail()'}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'onfocusout': 'validatePassword()'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'onfocusout': 'validateConfirmPassword()'}))
+
+    #  pour que email soit required
 
     class Meta:
         model = User

@@ -1,123 +1,208 @@
-const formRegister = $("#id_form_register"); //cibler form
-moveErrorServer(); //déplacer erreur du serveur (activer function)
+// Input fields
+const userName = document.getElementById('id_username');
+const password = document.getElementById('id_password1');
+const confirmPassword = document.getElementById('id_password2');
+const email = document.getElementById('id_email');
+// Form
+const form = document.getElementById('id_form_register');
+const form_j = $('#id_form_register');
+// Validation colors
+const green = '#4CAF50';
+const red = '#F44336';
+const h2 = document.getElementById('h2');
+// mes declarations
+const dataUrlUsername = "data-validate-username-url";
+const dataUrlEmail = "data-validate-email-url";
 
 
-jQuery.validator.setDefaults({
-    debug: false,
-    success: "is-valid",
-    validClass: "is-valid",
-    errorClass: "is-invalid",
-});
+// Validators
+function validateUserName() {
+    // check if is empty
+    if (checkIfEmpty(userName)) return;
+    // is if it has only letters
+    if (!checkIfOnlyLetters(userName)) return;
+    // is username taken
+    if (!CheckFieldInDb(userName, form_j, dataUrlUsername)) return;
+    return true;
+}
 
-/* // pour ajouter une méthode
-$.validator.addMethod('pasDeSpace', function (value, element) {
-    return value === '' || value.trim().length !== 0
-}, "espace not autorisé");    */
+function validateEmail() {
+    if (checkIfEmpty(email)) return;
+    if (!containsCharacters(email, 5)) return;
+    if (!CheckFieldInDb(email, form_j, dataUrlEmail)) return;
+    return true;
+}
 
-// pour modifier une méthode existante
-$.validator.methods.email = function (value, element) { //correction validation mail
-    return this.optional(element) || /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value);//correction validation mail
-};//correction validation mail
+function validatePassword() {
+    // Empty check
+    if (checkIfEmpty(password)) return;
+    // Must of in certain length
+    if (!meetLength(password, 8, 30)) return;
+    // check password against our character set
+    // 1- a
+    // 2- a 1
+    // 3- A a 1
+    // 4- A a 1 @
+    //   if (!containsCharacters(password, 4)) return;
+    return true;
+}
 
-formRegister.validate({
-    rules: {
-        email: {
-            required: true,
-            email: true,
-            function: {
-                deleteErrorServer, //supprimer erreur du serveur (activer function)
-                deleteErrorFoued, //supprimer erreur du serveur (activer function)
-            },
-        },
-        username: {
-            required: true,
-            minlength: 3,
-            nowhitespace: true
-        },
-        password1: {
-            required: true,
-            minlength: 6,
-        },
-        password2: {
-            required: true,
-            equalTo: '#id_password1',
-            minlength: 6,
-        }
-    },
-    messages: {
-        email: {
-            required: 'email bassif @',
-            email: 'ha goulna email machi...',
-        },
-        username: {
-            required: 'username bassif ',
-            minlength: 'au moins 3 chart pour username',
-            nowhitespace: "pas despace svp"
-        },
-        password1: {
-            required: 'ha dir pw',
-            minlength: 'au moins 6 chart pour pw',
-        },
-        password2: {
-            required: 'entrer confirmation de password',
-            equalTo: 'password nest pas le meme',
-            minlength: 'au moins 6 chart pour conf pw',
-        }
-    },
-    errorPlacement: function (error, element) {
-        error.appendTo(element.parent().children('div').children('div.cls_error'));
-    },
-});
+function validateConfirmPassword() {
+    if (password.className !== 'form-control is-valid') {
+        setInvalid(confirmPassword, 'Password must be valid');
+        return;
+    }
+    // If they match
+    if (password.value !== confirmPassword.value) {
+        setInvalid(confirmPassword, 'Passwords must match');
+        return;
+    } else {
+        setValid(confirmPassword);
+    }
+    return true;
+}
 
-const email_input = $("#id_email");
 
-email_input.on('keyup input', function CheckEmail() { // check email
-    const email_Ele = document.getElementById('id_email');
-    const labelMsgEmail_ = document.createElement("label");
-    labelMsgEmail_.id = 'id_labelMsgEmail';
-    labelMsgEmail_.style.display = "none";
-    email_Ele.parentNode.appendChild(labelMsgEmail_);
-    const labelMsgEmail = $('#id_labelMsgEmail');
-    labelMsgEmail.appendTo($('#id_email').parent().children('div').children('div.cls_error'));
-    const form = $(this).closest("form");
+// Utility functions
+function CheckFieldInDb(field, form, dataUrl) {
+    const username = field.value; //val de input qui va être envoyé au view
     $.ajax({
-        url: form.attr("data-validate-email-url"),
+        url: form.attr(dataUrl),
         data: form.serialize(),
         dataType: 'json',
         success: function (data) {
             if (data.is_taken) {
-                labelMsgEmail.text(data.error_message);
-                labelMsgEmail.css("display", "block");
-                email_input.addClass('is-invalid');
-                email_input.removeClass('is-valid');
-                deleteErrorJquery();
-                deleteErrorServer();
+                setInvalid(field, `${field.name} déja pris`);
             } else {
-                labelMsgEmail.css("display", "none");
-                email_input.addClass('is-valid');
-                email_input.removeClass('is-invalid');
-                deleteErrorFoued();
-                deleteErrorJquery();
+                setValid(field);
             }
         }
     });
-});
+}
 
 
-function moveErrorServer() { //déplacer erreur du serveur
-    let erreur = $('#labelerrorserver');
-    let cible = erreur.parent().children('div').children('div.cls_error');
-    erreur.appendTo(cible);
+function checkIfEmpty(field) {
+    if (isEmpty(field.value.trim())) {
+        // set field invalid
+        setInvalid(field, `${field.name} must not be empty`);
+        return true;
+    } else {
+        // set field valid
+        setValid(field);
+        return false;
+    }
+}
+
+
+function isEmpty(value) {
+    return value === '';
+}
+
+function setInvalid(field, message) {
+    field.className = 'form-control is-invalid';
+    // field.nextElementSibling.innerHTML = message;
+    field.parentElement.firstElementChild.firstElementChild.nextElementSibling.innerHTML = message;
+}
+
+
+function setValid(field) {
+    field.className = 'form-control is-valid';
+    field.parentElement.firstElementChild.firstElementChild.nextElementSibling.innerHTML = "";
+    //field.nextElementSibling.style.color = green;
+}
+
+
+function checkIfOnlyLetters(field) {
+    if (/^[a-zA-Z ]+$/.test(field.value)) {
+        setValid(field);
+        return true;
+    } else {
+        setInvalid(field, `${field.name} must contain only letters`);
+        return false;
+    }
+}
+
+function meetLength(field, minLength, maxLength) {
+    if (field.value.length >= minLength && field.value.length < maxLength) {
+        setValid(field);
+        return true;
+    } else if (field.value.length < minLength) {
+        setInvalid(
+            field,
+            `${field.name} must be at least ${minLength} characters long`
+        );
+        return false;
+    } else {
+        setInvalid(
+            field,
+            `${field.name} must be shorter than ${maxLength} characters`
+        );
+        return false;
+    }
+}
+
+function containsCharacters(field, code) {
+    let regEx;
+    switch (code) {
+        case 1:
+            // letters
+            regEx = /(?=.*[a-zA-Z])/;
+            return matchWithRegEx(regEx, field, 'Must contain at least one letter');
+        case 2:
+            // letter and numbers
+            regEx = /(?=.*\d)(?=.*[a-zA-Z])/;
+            return matchWithRegEx(
+                regEx,
+                field,
+                'Must contain at least one letter and one number'
+            );
+        case 3:
+            // uppercase, lowercase and number
+            regEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
+            return matchWithRegEx(
+                regEx,
+                field,
+                'Must contain at least one uppercase, one lowercase letter and one number'
+            );
+        case 4:
+            // uppercase, lowercase, number and special char
+            regEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/;
+            return matchWithRegEx(
+                regEx,
+                field,
+                'Must contain at least one uppercase, one lowercase letter, one number and one special character'
+            );
+        case 5:
+            // Email pattern
+            regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return matchWithRegEx(regEx, field, 'Must be a valid email address');
+        default:
+            return false;
+    }
+}
+
+function matchWithRegEx(regEx, field, message) {
+    if (field.value.match(regEx)) {
+        setValid(field);
+        return true;
+    } else {
+        setInvalid(field, message);
+        return false;
+    }
+}
+
+
+
+function moveErrorServer(id) { //déplacer erreur du serveur
+    const erreur = document.getElementById(id);
+    const cible = erreur.parentElement.firstElementChild.firstElementChild.nextElementSibling;
+    // console.log(erreur.textContent);
+    // console.log(cible);
+    cible.appendChild(erreur);
 }//déplacer erreur du serveur
 
-function deleteErrorServer() { //supprimer erreur du serveur
-    $('#labelerrorserver').remove();
-}//supprimer erreur du serveur
 
-function deleteErrorJquery() { //supprimer erreur du Jquery
-    $('#id_email-error').remove();
-}//supprimer erreur du Jquery
-
-function deleteErrorFoued() { //supprimer erreur du foued
-    $('#id_message_email').remove();
-}//supprimer erreur du foued
+moveErrorServer('id_password2_labelerrorserver');
+moveErrorServer('id_email_labelerrorserver');
+moveErrorServer('id_username_labelerrorserver');
+moveErrorServer('id_password1_labelerrorserver');
