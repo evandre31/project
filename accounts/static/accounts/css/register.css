@@ -1,0 +1,22 @@
+/*hide ans show password*/
+.form-group {
+    position: relative;
+}
+.form-group .password-icon {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 60%;
+    transform: translateY(-10%);
+    width: 50px;
+    color: rgba(100, 99, 98, 0.91);
+    transition: all 0.2s;
+    right: 15px;
+}
+.form-group .password-icon .feather-eye-off {
+    display: none;
+}
+.form-group .password-icon:hover {
+    cursor: pointer;
+    color: #ff4754;
+}

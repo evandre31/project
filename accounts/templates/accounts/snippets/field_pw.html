@@ -19,6 +19,10 @@
     {% else %}
         {% render_field field class="form-control" %}<!--get field-->
     {% endif %}
+    <div class="password-icon"><!--eye of show/hide password-->
+        <i id="ideye_{{ field.name }}" data-feather="eye"></i>
+        <i id="ideyeoff_{{ field.name }}" data-feather="eye-off"></i>
+    </div><!--eye of show/hide password-->
     {% if field.help_text %} <!--si help_text-->
         <small class="form-text text-muted text-right">{{ field.help_text }}</small>
     {% endif %}
