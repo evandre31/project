@@ -192,18 +192,3 @@ function matchWithRegEx(regEx, field, message) {
         return false;
     }
 }
-
-
-function moveErrorServer(id) { //déplacer erreur du serveur
-    const erreur = document.getElementById(id);
-    const cible = erreur.parentElement.firstElementChild.firstElementChild.nextElementSibling;
-    // console.log(erreur.textContent);
-    // console.log(cible);
-    cible.appendChild(erreur);
-}//déplacer erreur du serveur
-
-
-moveErrorServer('id_email_labelerrorserver');
-moveErrorServer('id_password2_labelerrorserver');
-moveErrorServer('id_username_labelerrorserver');
-moveErrorServer('id_password1_labelerrorserver');

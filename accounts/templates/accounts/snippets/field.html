@@ -1,25 +1,25 @@
 {% load widget_tweaks %}
-
 <div class="form-group">
-    <div class="row">
-        <div class="col-lg-6">{{ field.label_tag }}</div> <!-- label dans le field -->
-        <div id="id_{{ field.name }}_error" class="col-lg-6 cls_error form-text text-right"
-             style="color: red"></div>
-    </div>
-    {% if form.is_bound %} <!-- si le form contient des données -->
-        {% if field.errors %} <!-- si le field contient des errors -->
-            {% render_field field class="form-control is-invalid" %}
-            {% for error in field.errors %} <!-- afficher les errors -->
-                <label id="id_{{ field.name }}_labelerrorserver" class="labelerrorserver">{{ error }}</label>
-                <!-- afficher les errors -->
-            {% endfor %} <!-- afficher les errors -->
-        {% else %} <!-- si le field ne  contient pas des errors -->
-            {% render_field field class="form-control is-valid" %}<!--  pas des errors -->
+    <div class="row"><!-- debut de row -->
+        <div class="col-lg-6">{{ field.label_tag }}</div><!-- label dans le field --><!-- 1e demi row -->
+        {% if form.is_bound %} <!-- si le form contient des données -->
+            {% if field.errors %}
+                {% for error in field.errors %}<!-- afficher les errors avant input -->
+                    <div class="col-lg-6 text-right" style="color: red">{{ error }}</div><!-- 2e demi row cas invalid -->
+                    </div><!-- fin de row  cas invalid-->
+                {% endfor %}
+                {% render_field field class="form-control is-invalid" %}<!-- field invalid -->
+            {% else %}
+                <div class="col-lg-6 text-right" style="color: red"></div><!-- 2e demi row cas valid -->
+                </div><!-- fin de row cas valid -->
+                {% render_field field class="form-control is-valid" %}<!-- field valid -->
+            {% endif %}
+        {% else %}
+            <div class="col-lg-6 text-right" style="color: red"></div><!-- 2e demi row get -->
+            </div><!-- fin de row get -->
+            {% render_field field class="form-control" %}<!-- field get -->
         {% endif %}
-    {% else %}
-        {% render_field field class="form-control" %}<!--get field-->
-    {% endif %}
-    {% if field.help_text %} <!--si help_text-->
-        <small class="form-text text-muted text-right">{{ field.help_text }}</small>
-    {% endif %}
+{% if field.help_text %} <!--si help_text-->
+    <small class="form-text text-muted text-right">{{ field.help_text }}</small>
+{% endif %}
 </div>

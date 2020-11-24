@@ -1,13 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
     <h2>Login</h2>
     <form method="post" novalidate>
         {% csrf_token %}
-{% include 'accounts/snippets/form.html' %}
+        {% include 'accounts/snippets/field.html' with field=form.username %}
+        {% include 'accounts/snippets/field_pw.html' with field=form.password %}
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </div>
-
     </form>
+    <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}?{% now "U" %}">
+
 {% endblock %}
+{% block javascript %}
+    {#    hide and show password#}
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        feather.replace();
+        {#password1#}
+        const eye = document.getElementById("ideye_password");
+        const eyeOff = document.getElementById("ideyeoff_password");
+        const password = document.getElementById("id_password");
+        eye.addEventListener("click", () => {
+            eye.style.display = "none";
+            eyeOff.style.display = "block";
+            password.type = "text";
+        });
+        eyeOff.addEventListener("click", () => {
+            eyeOff.style.display = "none";
+            eye.style.display = "block";
+            password.type = "password";
+        });
+    </script>
+{% endblock javascript %}

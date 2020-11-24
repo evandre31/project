@@ -6,9 +6,15 @@ from .models import Profile
 
 class SignupForm(UserCreationForm):  # pour register
     username = forms.CharField(help_text='pas despace ni walou',
+                               error_messages={'required': "username obligatoire depuis server"},
+                               label='Username',
                                widget=forms.TextInput(
                                    attrs={'onfocusout': 'validateUserName()', 'placeholder': 'username'}))
-    email = forms.EmailField(help_text='un email valid stp ex@abc.de', required=True, label='ton mail', max_length=100,
+    email = forms.EmailField(help_text='un email valid stp ex@abc.de',
+                             required=True,
+                             label='Email',
+                             max_length=100,
+                             error_messages={'required': "email obligatoire depuis server"},
                              widget=forms.EmailInput
                              (attrs={'onfocusout': 'validateEmail()', 'placeholder': 'mets ton email'}))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'onfocusout': 'validatePassword()'}))

@@ -1,29 +1,29 @@
 {% load widget_tweaks %}
-
 <div class="form-group">
     <div class="row">
-        <div class="col-lg-6">{{ field.label_tag }}</div> <!-- label dans le field -->
-        <div id="id_{{ field.name }}_error" class="col-lg-6 cls_error form-text text-right"
-             style="color: red"></div>
-    </div>
-    {% if form.is_bound %} <!-- si le form contient des données -->
-        {% if field.errors %} <!-- si le field contient des errors -->
-            {% render_field field class="form-control is-invalid" %}
-            {% for error in field.errors %} <!-- afficher les errors -->
-                <label id="id_{{ field.name }}_labelerrorserver" class="labelerrorserver">{{ error }}</label>
-                <!-- afficher les errors -->
-            {% endfor %} <!-- afficher les errors -->
-        {% else %} <!-- si le field ne  contient pas des errors -->
-            {% render_field field class="form-control is-valid" %}<!--  pas des errors -->
+        <div class="col-lg-6">{{ field.label_tag }}</div>
+        {% if form.is_bound %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="col-lg-6 text-right" style="color: red">{{ error }}</div>
+                    </div>
+                {% endfor %}
+                {% render_field field class="form-control is-invalid" %}
+            {% else %}
+                <div class="col-lg-6 text-right" style="color: red"></div>
+                </div>
+                {% render_field field class="form-control is-invalid" %}
+            {% endif %}
+        {% else %}
+            <div class="col-lg-6 text-right" style="color: red"></div>
+            </div>
+            {% render_field field class="form-control" %}
         {% endif %}
-    {% else %}
-        {% render_field field class="form-control" %}<!--get field-->
-    {% endif %}
-    <div class="password-icon"><!--eye of show/hide password-->
-        <i id="ideye_{{ field.name }}" data-feather="eye"></i>
-        <i id="ideyeoff_{{ field.name }}" data-feather="eye-off"></i>
-    </div><!--eye of show/hide password-->
-    {% if field.help_text %} <!--si help_text-->
-        <small class="form-text text-muted text-right">{{ field.help_text }}</small>
-    {% endif %}
+<div class="password-icon"><!--eye of show/hide password-->
+    <i id="ideye_{{ field.name }}" data-feather="eye"></i>
+    <i id="ideyeoff_{{ field.name }}" data-feather="eye-off"></i>
+</div><!--eye of show/hide password-->
+{% if field.help_text %} <!--si help_text-->
+    <small class="form-text text-muted text-right">{{ field.help_text }}</small>
+{% endif %}
 </div>
