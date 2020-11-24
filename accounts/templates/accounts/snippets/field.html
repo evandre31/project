@@ -8,16 +8,16 @@
                     <div class="col-lg-6 text-right" style="color: red">{{ error }}</div><!-- 2e demi row cas invalid -->
                     </div><!-- fin de row  cas invalid-->
                 {% endfor %}
-                {% render_field field class="form-control is-invalid" %}<!-- field invalid -->
+                {% render_field field onfocusout=f_onfocusout onkeyup=f_onkeyup class="form-control is-invalid" %}<!-- field invalid -->
             {% else %}
                 <div class="col-lg-6 text-right" style="color: red"></div><!-- 2e demi row cas valid -->
                 </div><!-- fin de row cas valid -->
-                {% render_field field class="form-control is-valid" %}<!-- field valid -->
+                {% render_field field onfocusout=f_onfocusout onkeyup=f_onkeyup class="form-control is-valid" %}<!-- field valid -->
             {% endif %}
         {% else %}
             <div class="col-lg-6 text-right" style="color: red"></div><!-- 2e demi row get -->
             </div><!-- fin de row get -->
-            {% render_field field class="form-control" %}<!-- field get -->
+            {% render_field field onfocusout=f_onfocusout onkeyup=f_onkeyup class="form-control" %}<!-- field get -->
         {% endif %}
 {% if field.help_text %} <!--si help_text-->
     <small class="form-text text-muted text-right">{{ field.help_text }}</small>
