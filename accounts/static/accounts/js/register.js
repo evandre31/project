@@ -33,6 +33,32 @@ function validateEmail() {
     return true;
 }
 
+// validation and check email in request reset password form_______________________
+function validateEmailReset() {
+    if (checkIfEmpty(email)) return;
+    if (!containsCharacters(email, 5)) return;
+    if (!CheckFieldInDbReset(email, form_j, dataUrlEmail)) return;
+    return true;
+}
+function CheckFieldInDbReset(field, form, dataUrl) {
+    const username = field.value; //val de input qui va être envoyé au view
+    $.ajax({
+        url: form.attr(dataUrl),
+        data: form.serialize(),
+        dataType: 'json',
+        success: function (data) {
+            if (data.is_taken) {
+                // language=HTML
+                var login =  `<a href="/accounts/login/">login</a>`;
+                setValid(field, `${field.name} : "${field.value}" déja pris ${login}`);
+            } else {
+                setInvalid(field,'cet email nexiste pas dans la bd');
+            }
+        }
+    });
+}
+//__________________________________________________________________
+
 function validatePassword() {
     // Empty check
     if (checkIfEmpty(password)) return;
@@ -62,6 +88,53 @@ function validateConfirmPassword() {
     return true;
 }
 
+//change password ____________and password reset ____________________________________
+const oldPassword = document.getElementById('id_old_password');
+const newPassword1 = document.getElementById('id_new_password1');
+const confirmPasswordChangePw = document.getElementById('id_new_password2');
+function validateOldPassword() {
+    // Empty check
+    if (checkIfEmpty(oldPassword)) return;
+    // Must of in certain length
+    if (!meetLength(oldPassword, 8, 30)) return;
+    // check password against our character set
+    // 1- a
+    // 2- a 1
+    // 3- A a 1
+    // 4- A a 1 @
+    //   if (!containsCharacters(password, 4)) return;
+    return true;
+}
+function validateNewPassword1ChangePw() {
+    // Empty check
+    if (checkIfEmpty(newPassword1)) return;
+    // Must of in certain length
+    if (!meetLength(newPassword1, 8, 30)) return;
+    // check password against our character set
+    // 1- a
+    // 2- a 1
+    // 3- A a 1
+    // 4- A a 1 @
+    //   if (!containsCharacters(password, 4)) return;
+    return true;
+}
+function validateConfirmPasswordChangePw() {
+    if (newPassword1.className !== 'form-control is-valid') {
+        setInvalid(confirmPasswordChangePw, 'Password must be valid');
+        return;
+    }
+    // If they match
+    if (newPassword1.value !== confirmPasswordChangePw.value) {
+        setInvalid(confirmPasswordChangePw, 'Passwords must match');
+        return;
+    } else {
+        setValid(confirmPasswordChangePw,'');
+    }
+    return true;
+}
+//fin change password _____________________________________________________________
+
+
 
 // Utility functions
 function CheckFieldInDb(field, form, dataUrl) {
@@ -76,11 +149,13 @@ function CheckFieldInDb(field, form, dataUrl) {
                 var login =  `<a href="/accounts/login/">login</a>`;
                 setInvalid(field, `${field.name} : "${field.value}" déja pris ${login}`);
             } else {
-                setValid(field);
+                setValid(field,"");
             }
         }
     });
 }
+
+
 
 
 function checkIfEmpty(field) {
@@ -107,9 +182,9 @@ function setInvalid(field, message) {
 }
 
 
-function setValid(field) {
+function setValid(field,message) {
     field.className = 'form-control is-valid';
-    field.parentElement.firstElementChild.firstElementChild.nextElementSibling.innerHTML = "";
+    field.parentElement.firstElementChild.firstElementChild.nextElementSibling.innerHTML = message;
     //field.nextElementSibling.style.color = green;
 }
 
@@ -126,7 +201,8 @@ function checkIfOnlyLetters(field) {
 
 function meetLength(field, minLength, maxLength) {
     if (field.value.length >= minLength && field.value.length < maxLength) {
-        setValid(field);
+        setValid(field,
+            '');
         return true;
     } else if (field.value.length < minLength) {
         setInvalid(
